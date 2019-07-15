@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import {
   Layout,
@@ -48,6 +48,13 @@ const Wrapper = styled.div`
 `
 
 const App = () => {
+  const [date, setDate] = useState([])
+  const [treeSelect, setTreeSelect] = useState([])
+
+  const toggleSwitch = checked => {
+    setTreeSelect(checked ? treeData.map(data => data.value) : [])
+  }
+
   return (
     <Layout>
       <Layout.Content style={{ padding: '0 50px' }}>
@@ -56,15 +63,25 @@ const App = () => {
           <Breadcrumb.Item>History Transaction</Breadcrumb.Item>
         </Breadcrumb>
         <Wrapper>
-          <DatePicker.RangePicker />
-          <Switch />
+          <DatePicker.RangePicker
+            value={date}
+            onChange={dateMoment => setDate(dateMoment)}
+          />
+          <Switch
+            checked={treeSelect.length === treeData.length}
+            onChange={toggleSwitch}
+          />
           <TreeSelect
             treeData={treeData}
             treeCheckable={true}
             searchPlaceholder="Please select portfolio"
             style={{ width: 300 }}
+            value={treeSelect}
+            onChange={value => setTreeSelect(value)}
           />
-          <Button type="primary">Submit</Button>
+          <Button type="primary" disabled={!date.length || !treeSelect.length}>
+            Submit
+          </Button>
         </Wrapper>
       </Layout.Content>
       <Layout.Footer style={{ textAlign: 'center' }}>
